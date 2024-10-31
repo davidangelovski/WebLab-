@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-@WebServlet(name = "EventListServlet", urlPatterns = {"/events/events-list"})
+@WebServlet(name = "EventListServlet", urlPatterns = {"/EventList"})
 public class EventListServlet extends HttpServlet {
 
     private final SpringTemplateEngine templateEngine;

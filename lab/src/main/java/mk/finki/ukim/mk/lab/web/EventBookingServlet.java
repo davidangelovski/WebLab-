@@ -15,7 +15,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "EventBookingServlet", urlPatterns = {"/eventbooking"})
+@WebServlet(name = "EventBookingServlet", urlPatterns = {"/EventBooking"})
 public class EventBookingServlet extends HttpServlet {
 
     private final EventService eventService;
