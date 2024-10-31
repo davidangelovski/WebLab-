@@ -14,6 +14,7 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet(name = "EventBookingServlet", urlPatterns = {"/EventBooking"})
 public class EventBookingServlet extends HttpServlet {
@@ -29,7 +30,7 @@ public class EventBookingServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String eventName = req.getParameter("rad");
+        String eventName = req.getParameter("choose");
         String numOfTickets = req.getParameter("numTickets");
 
         IWebExchange iWebExchange = JakartaServletWebApplication.buildApplication(req.getServletContext()).buildExchange(req, resp);
@@ -37,7 +38,9 @@ public class EventBookingServlet extends HttpServlet {
         context.setVariable("hostName", req.getRemoteHost());
         context.setVariable("hostAddress", req.getRemoteAddr());
         context.setVariable("eventName", eventName);
-        context.setVariable("numOfTickets", numOfTickets);
+        if(!Objects.equals(numOfTickets, "")) {
+            context.setVariable("numOfTickets", numOfTickets);
+        }
         templateEngine.process("bookingConfirmation.html", context, resp.getWriter());
     }
 }

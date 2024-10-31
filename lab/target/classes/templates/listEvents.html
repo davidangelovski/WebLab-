@@ -15,13 +15,13 @@
     <h1>Welcome to our Event Booking App</h1>
 </header>
 <main>
-    <h2>Search an event:</h2>
+    <h2>Search events:</h2>
     <form th:method="GET" th:action="@{/}">
         <label for="search">By Event Name:</label>
-        <input type="text" name="searchName" id="search" placeholder="Search an event">
+        <input type="text" name="eventName" id="search" placeholder="Search an event">
         <br/>
         <label for="minRating">By Minimum Event Rating (0.00 - 10.00): </label>
-        <input type="number" name="minRating" id="minRating" min="0" max="10" placeholder="Min Rating">
+        <input type="number" name="minRating" id="minRating" min="0" max="10" step="0.01" placeholder="Min Rating">
         <br/>
         <input type="submit" value="Submit">
     </form>
@@ -38,7 +38,7 @@
                 Rating: <th:block th:text="${event.getPopularityScore()}"></th:block>
             </p>
 
-            <input type="radio" id="rad1" name="rad" th:value="${event.name}" />
+            <input type="radio" id="choose" name="choose" th:value="${event.name}" />
             <br/>
             <br/>
         </div>

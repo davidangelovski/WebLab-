@@ -16,11 +16,4 @@ public class EventRepository {
         return DataHolder.eventList;
     }
 
-    public List<Event> searchEvents(String text) {
-        return DataHolder.eventList.stream()
-                .filter(event -> event.getName().toLowerCase().contains(text.toLowerCase()) ||
-                        event.getDescription().toLowerCase().contains(text.toLowerCase()))
-                .collect(Collectors.toList());
-    }
-
 }

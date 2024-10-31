@@ -15,9 +15,10 @@ import org.thymeleaf.web.servlet.JakartaServletWebApplication;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
-@WebServlet(name = "EventListServlet", urlPatterns = {"/EventList"})
+@WebServlet(name = "EventListServlet", urlPatterns = {""})
 public class EventListServlet extends HttpServlet {
 
     private final SpringTemplateEngine templateEngine;
@@ -31,20 +32,25 @@ public class EventListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Event> eventList;
-        String searchName = req.getParameter("searchName");
+        String eventName = req.getParameter("eventName");
         String minRating =req.getParameter("minRating");
 
-        if (searchName != null && minRating != null && !Objects.equals(minRating, "")) {
-            eventList = eventService.searchEvents(searchName).stream()
+        if (eventName != null && minRating != null && !Objects.equals(minRating, "")) {
+            eventList = eventService.listAll().stream()
+                    .filter(event -> event.getName().toLowerCase().contains(eventName.toLowerCase()) ||
+                            event.getDescription().toLowerCase().contains(eventName.toLowerCase()))
                     .filter(event -> event.getPopularityScore() >= Double.parseDouble(minRating))
+                    .toList();
+        } else if (eventName != null) {
+            eventList = eventService.listAll().stream()
+                    .filter(event -> event.getName().toLowerCase().contains(eventName.toLowerCase()) ||
+                            event.getDescription().toLowerCase().contains(eventName.toLowerCase()))
                     .toList();
         } else if (minRating != null && !Objects.equals(minRating, "")) {
             eventList = eventService.listAll().stream()
                     .filter(event -> event.getPopularityScore() >= Double.parseDouble(minRating))
                     .toList();
-        } else if (searchName != null) {
-            eventList = eventService.searchEvents(searchName);
-        } else {
+        }  else {
             eventList = eventService.listAll();
         }
 
