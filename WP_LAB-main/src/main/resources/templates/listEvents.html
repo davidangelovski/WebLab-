@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <meta charset="utf-8">
+    <title>Event Booking page - Welcome and choose an Event</title>
+    <style type="text/css">
+        body {
+            width: 800px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Welcome to our Event Booking App</h1>
+    <div th:if="${user==null}">
+        Not logged in <a href="/login">Log in</a>
+    </div>
+    <div th:unless="${user==null}">
+        Logged in as <strong th:text="${user.getName()==null? user.getUsername():user.getName()}"></strong>
+        <div>
+            <form action="/logout" method="GET">
+                <button type="submit">Log out</button>
+            </form>
+        </div>
+    </div>
+</header>
+<main>
+<div xmlns:th="http://www.thymeleaf.org">
+    <div th:if="${error}!=null" th:text="Following error occured ${error}"></div>
+<!--    <form action="/events/booking" method="POST">-->
+        <h2>Choose an event:</h2>
+        <ul>
+            <li th:each="event: ${events}">
+                <input type="radio" name="eventName" th:value="${event.getName()}" th:text="'Name: ' + ${event.getName()} + ' Description: ' + ${event.getDescription()} + ' Rating: ' + ${event.getPopularityScore()} + ' ID: '+${event.getEventId()}"/>
+                <div th:text="${event.getLocation()}"></div>
+                <form sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_EDITOR')" th:action="@{'/events/edit/{id}' (id=${event.getEventId()})}" method="GET">
+                    <button type="submit">Edit event</button>
+                </form>
+                <form  sec:authorize="hasRole('ROLE_ADMIN')" th:action="@{'/events/delete/{id}' (id=${event.getEventId()})}" method="POST">
+                    <button type="submit">Delete event</button>
+                </form>
+                <form  sec:authorize="isAuthenticated()" th:action="@{'/events/like/{id}' (id=${event.getEventId()})}" method="POST">
+                    <button type="submit">Like</button>
+                </form>
+            </li>
+        </ul>
+        <h2>Choose number of tickets:</h2>
+        <input type="number" name="numTickets" min="1" max="10"><br/>
+        <br/>
+<!--        <input type="submit" value="Submit">-->
+<!--    </form>-->
+
+    <form action="events" method="POST">
+    <h2>Filter events:</h2>
+        <input type="text" name="eventNameFilter" placeholder="Filter events by name"/>
+        <input type="text" name="eventRatingFilter" placeholder="Filter events by their minimum rating"/>
+        <input type="submit" value="Submit">
+    </form>
+
+    <form sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_EDITOR')" action="events/add-event" method="GET">
+    <h2>Add an event:</h2>
+        <input type="submit" value="New event"/>
+    </form>
+
+    <form action="/bookings" method="POST">
+        <h2>Filter booked events:</h2>
+        <input type="text" name="bookedAttendeeName" placeholder="Attendee name"/>
+        <input type="text" name="bookedEventName" placeholder="Event name"/>
+        <input type="submit" value="Submit"/>
+    </form>
+</div>
+</main>
+</body>
+</html>
